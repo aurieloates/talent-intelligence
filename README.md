@@ -3,6 +3,8 @@
 
 Internal talent sourcing tool for Zapier's TA team.
 
+Best for: Software engineering and engineering manager roles. Signal sources (GitHub, engineering blogs, conference talks) are specific to technical candidates.
+
 Scans any company and returns:
 
 - Full tech stack fingerprint
