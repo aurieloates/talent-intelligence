@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)file:///Users/aurieloates/Downloads/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --orange: #FF4F00; --orange-light: #FFF0EB; --orange-mid: #FFD6C2;
+    --bone: #F8F5F0; --mist: #F0EDE8; --stone: #C8C4BC; --clay: #8A8680;
+    --earth: #3D3935; --coal: #1A1714; --moss: #2D4A2D; --moss-light: #EBF2EB;
+    --plum: #3D2B4A; --plum-light: #F0EBF5; --sky: #1A3A5C; --sky-light: #EBF2FA;
+    --border: rgba(61,57,53,0.1); --border2: rgba(61,57,53,0.18);
+  }
+  body { background: var(--bone); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; }
+  .shell { max-width: 900px; margin: 0 auto; padding: 28px 24px 52px; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 2px solid var(--border); }
+  .zap-mark { width: 32px; height: 32px; background: var(--orange); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .zap-mark svg { width: 18px; height: 18px; }
+  .header-text h1 { font-size: 17px; font-weight: 600; color: var(--coal); letter-spacing: -0.02em; line-height: 1; }
+  .header-text p { font-size: 11px; color: var(--clay); margin-top: 3px; }
+  .header-badge { margin-left: auto; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); background: var(--orange-light); border: 1px solid var(--orange-mid); padding: 3px 9px; border-radius: 4px; }
+  .tabs { display: flex; gap: 2px; margin-bottom: 16px; background: var(--mist); border: 1px solid var(--border2); border-radius: 10px; padding: 3px; }
+  .tab { flex: 1; text-align: center; padding: 7px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--clay); border: none; background: none; font-family: 'Inter', sans-serif; transition: all 0.15s; }
+  .tab.active { background: #fff; color: var(--coal); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .panel { display: none; } .panel.active { display: block; }
+  .step-card { background: #fff; border: 1px solid var(--border2); border-radius: 12px; padding: 20px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: var(--orange); color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; margin-right: 8px; flex-shrink: 0; }
+  .step-head { display: flex; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--coal); }
+  .input-label { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--clay); margin-bottom: 8px; display: block; }
+  .input-row { display: flex; gap: 8px; }
+  input[type="text"] { flex: 1; background: var(--bone); border: 1px solid var(--border2); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 14px; padding: 10px 14px; border-radius: 8px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  input[type="text"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); background: #fff; }
+  input[type="text"]::placeholder { color: var(--stone); }
+  .btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
+  .btn-orange { background: var(--orange); color: #fff; } .btn-orange:hover { background: #E04400; }
+  .btn-ghost { background: var(--mist); color: var(--earth); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+  .quick-fills { display: flex; align-items: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .quick-label { font-size: 10px; font-weight: 500; color: var(--clay); letter-spacing: 0.05em; text-transform: uppercase; }
+  .pill { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; padding: 4px 11px; border-radius: 20px; border: 1px solid var(--border2); color: var(--earth); background: var(--mist); cursor: pointer; transition: all 0.12s; }
+  .pill:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+  .prompt-box { background: var(--coal); border-radius: 10px; overflow: hidden; margin-top: 4px; }
+  .prompt-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: var(--earth); }
+  .prompt-toolbar span { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone); }
+  .copy-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; }
+  .copy-btn:hover { background: rgba(255,255,255,0.18); }
+  .prompt-text { padding: 14px 16px; font-family: monospace; font-size: 11px; color: #D4D0C8; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow-y: auto; }
+  .arrow-hint { display: flex; align-items: center; gap: 8px; margin: 10px 0; font-size: 12px; color: var(--clay); }
+  .arrow-hint::before, .arrow-hint::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+  textarea { width: 100%; background: var(--bone); border: 1px solid var(--border2); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 12px; padding: 12px 14px; border-radius: 8px; outline: none; resize: vertical; min-height: 120px; line-height: 1.6; transition: border-color 0.15s; }
+  textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); background: #fff; }
+  textarea::placeholder { color: var(--stone); }
+  .paste-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+  .error-hint { font-size: 11px; color: #CC3300; background: #FFF5F3; border: 1px solid #FFCCC0; border-radius: 6px; padding: 8px 12px; margin-top: 8px; display: none; }
+  .output-grid { display: grid; gap: 12px; }
+  .section { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .section-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--mist); }
+  .section-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+  .tag-stack { background: var(--plum-light); color: var(--plum); border: 1px solid rgba(61,43,74,0.15); }
+  .tag-targets { background: var(--orange-light); color: var(--orange); border: 1px solid var(--orange-mid); }
+  .tag-context { background: var(--moss-light); color: var(--moss); border: 1px solid rgba(45,74,45,0.2); }
+  .section-body { padding: 16px; }
+  .stack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .stack-row { background: var(--bone); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .stack-row-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--clay); margin-bottom: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 5px; border: 1px solid; }
+  .chip-lang { background: var(--sky-light); color: var(--sky); border-color: rgba(26,58,92,0.2); }
+  .chip-infra { background: var(--plum-light); color: var(--plum); border-color: rgba(61,43,74,0.2); }
+  .chip-ai { background: var(--orange-light); color: #C03A00; border-color: var(--orange-mid); }
+  .chip-data { background: var(--moss-light); color: var(--moss); border-color: rgba(45,74,45,0.25); }
+  .chip-tool { background: var(--mist); color: var(--clay); border-color: var(--border2); }
+  .stack-signal { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 12px; }
+  .target-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; background: var(--bone); transition: border-color 0.12s, box-shadow 0.12s; }
+  .target-card:last-child { margin-bottom: 0; }
+  .target-card:hover { border-color: var(--orange-mid); box-shadow: 0 2px 8px rgba(255,79,0,0.06); }
+  .target-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .target-name { font-size: 13px; font-weight: 600; color: var(--coal); flex: 1; margin-right: 8px; }
+  .score { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+  .score-high { background: var(--orange-light); color: #C03A00; border: 1px solid var(--orange-mid); }
+  .score-mid  { background: var(--plum-light); color: var(--plum); border: 1px solid rgba(61,43,74,0.2); }
+  .score-low  { background: var(--mist); color: var(--clay); border: 1px solid var(--border2); }
+  .field-row { font-size: 12px; color: var(--clay); margin-top: 7px; display: flex; align-items: flex-start; gap: 6px; line-height: 1.55; }
+  .field-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+  .lbl-why      { color: var(--earth); background: var(--mist); border: 1px solid var(--border2); }
+  .lbl-tech     { color: var(--plum); background: var(--plum-light); border: 1px solid rgba(61,43,74,0.15); }
+  .lbl-outreach { color: var(--orange); background: var(--orange-light); border: 1px solid var(--orange-mid); }
+  .lbl-github   { color: var(--sky); background: var(--sky-light); border: 1px solid rgba(26,58,92,0.2); }
+  .lbl-linkedin { color: var(--moss); background: var(--moss-light); border: 1px solid rgba(45,74,45,0.2); }
+  .divider { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .prose { font-size: 13px; color: var(--clay); line-height: 1.75; margin-bottom: 10px; }
+  .prose:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--earth); font-weight: 600; }
+  .empty { text-align: center; padding: 52px 24px; }
+  .empty-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; opacity: 0.3; }
+  .empty-box { height: 48px; background: var(--mist); border: 1px solid var(--border2); border-radius: 8px; }
+  .empty-box.tall { height: 72px; }
+  .empty-text { font-size: 13px; font-weight: 500; color: var(--clay); margin-bottom: 4px; }
+  .empty-sub { font-size: 11px; color: var(--stone); }
+  .success-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--moss-light); border: 1px solid rgba(45,74,45,0.2); border-radius: 8px; margin-bottom: 14px; font-size: 12px; color: var(--moss); font-weight: 500; }
+  .dot-g { width: 7px; height: 7px; border-radius: 50%; background: var(--moss); flex-shrink: 0; }
+  .li-block { background: var(--bone); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+  .li-title { font-size: 11px; font-weight: 600; color: var(--earth); margin-bottom: 6px; }
+  .li-string { font-family: monospace; font-size: 11px; color: var(--plum); background: var(--plum-light); border: 1px solid rgba(61,43,74,0.15); padding: 6px 10px; border-radius: 5px; word-break: break-all; }
+  .li-filter { font-size: 11px; color: var(--clay); margin-top: 5px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="zap-mark">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.5 2L4 10h5.5L7.5 16L14 8H8.5L10.5 2Z" fill="white"></path>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Company Intelligence Layer</h1>
+      <p>Talent signal scanner — People &amp; Talent Acquisition</p>
+    </div>
+    <span class="header-badge">Beta v2</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-scan" onclick="switchTab(&#39;scan&#39;)">⚡ Run Scan</button>
+    <button class="tab" id="tab-results" onclick="switchTab(&#39;results&#39;)">📊 Results</button>
+  </div>
+
+  <div class="panel active" id="panel-scan">
+    <div class="step-card">
+      <div class="step-head"><span class="step-num">1</span> Enter a company</div>
+      <div class="input-row">
+        <input type="text" id="companyInput" placeholder="e.g. Stripe, Vercel, Glean, Modal Labs" onkeydown="if(event.key===&#39;Enter&#39;)generatePrompt()">
+        <button class="btn btn-orange" onclick="generatePrompt()">Generate Prompt</button>
+      </div>
+      <div class="quick-fills">
+        <span class="quick-label">Try</span>
+        <button class="pill" onclick="quickFill(&#39;Stripe&#39;)">Stripe</button>
+        <button class="pill" onclick="quickFill(&#39;Linear&#39;)">Linear</button>
+        <button class="pill" onclick="quickFill(&#39;Vercel&#39;)">Vercel</button>
+        <button class="pill" onclick="quickFill(&#39;Glean&#39;)">Glean</button>
+        <button class="pill" onclick="quickFill(&#39;Retool&#39;)">Retool</button>
+        <button class="pill" onclick="quickFill(&#39;Modal Labs&#39;)">Modal Labs</button>
+        <button class="pill" onclick="quickFill(&#39;Fly.io&#39;)">Fly.io</button>
+      </div>
+    </div>
+
+    <div id="step2" style="display:none">
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">2</span> Copy prompt → paste into Claude chat</div>
+        <div class="prompt-box">
+          <div class="prompt-toolbar">
+            <span>Prompt</span>
+            <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy</button>
+          </div>
+          <div class="prompt-text" id="promptText"></div>
+        </div>
+      </div>
+
+      <div class="arrow-hint">paste Claude's full response below</div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">3</span> Paste Claude's response → Render</div>
+        <span class="input-label">Claude's response</span>
+        <textarea id="pasteArea" placeholder="Paste the full response from Claude here..."></textarea>
+        <div id="errorHint" class="error-hint"></div>
+        <div class="paste-row">
+          <button class="btn btn-orange" onclick="renderFromPaste()">Render Report →</button>
+          <button class="btn btn-ghost" onclick="clearPaste()">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-results">
+    <div id="outputGrid">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div class="section-body">
+          <div class="empty">
+            <div class="empty-grid"><div class="empty-box"></div><div class="empty-box tall"></div><div class="empty-box"></div></div>
+            <div class="empty-text">No report yet</div>
+            <div class="empty-sub">Run a scan in the ⚡ tab to generate a report</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentCompany = '';
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function quickFill(name) {
+  document.getElementById('companyInput').value = name;
+  document.getElementById('step2').style.display = 'none';
+}
+
+function generatePrompt() {
+  var company = document.getElementById('companyInput').value.trim();
+  if (!company) { document.getElementById('companyInput').focus(); return; }
+  currentCompany = company;
+  document.getElementById('promptText').textContent = buildPrompt(company);
+  document.getElementById('step2').style.display = 'block';
+  setTimeout(function() { document.getElementById('step2').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+}
+
+function buildPrompt(company) {
+  return 'You are a senior talent intelligence analyst for Zapier\'s TA team. Analyze the company: "' + company + '"\n\nSearch the web for current signals — GitHub repos and contributor credits, engineering blog bylines, job listings (for stack clues), conference talks, and LinkedIn signals.\n\nReturn a report in EXACTLY this format:\n\n## TECH STACK FINGERPRINT\n- LANGUAGES: [primary languages]\n- FRAMEWORKS: [web/app frameworks]\n- INFRA: [cloud, compute, deployment tools]\n- DATA: [databases, pipelines, warehouses]\n- AI/ML: [models, frameworks, AI tooling]\n- TOOLING: [dev experience, observability, CI/CD]\n- SIGNAL: [2-3 sentences on engineering culture]\n\n## WARM TARGETS\n\nNAME TYPE: [Full Name — Role Title]\nWHY WARM: [specific thing they built/wrote/shipped]\nTECH SIGNAL: [concrete evidence — commit, feature, talk, paper]\nOUTREACH ANGLE: [one specific cold message hook]\nGITHUB: [handle or "not found"]\nLINKEDIN: [url or "search: Full Name + ' + company + '"]\n\n[repeat the NAME TYPE block for 4-6 people]\n\n## SOURCING CONTEXT\n\n[2-3 paragraphs on what makes these engineers interesting, what frustrates them, what Zapier offers]\n\nReal names only — no personas.';
+}
+
+function copyPrompt() {
+  var text = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    document.getElementById('copyBtn').textContent = 'Copied ✓';
+    setTimeout(function() { document.getElementById('copyBtn').textContent = 'Copy'; }, 2000);
+  });
+}
+
+function clearPaste() {
+  document.getElementById('pasteArea').value = '';
+  document.getElementById('errorHint').style.display = 'none';
+}
+
+function showError(msg) {
+  var el = document.getElementById('errorHint');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function renderFromPaste() {
+  var raw = document.getElementById('pasteArea').value.trim();
+  document.getElementById('errorHint').style.display = 'none';
+
+  if (!raw) {
+    showError('Nothing to render — paste Claude\'s response above first.');
+    return;
+  }
+
+  if (!currentCompany) {
+    currentCompany = 'Company';
+  }
+
+  try {
+    var sections = splitSections(raw);
+
+    if (!sections.stack && !sections.targets && !sections.context) {
+      showError('Could not find report sections (## TECH STACK FINGERPRINT, ## WARM TARGETS, ## SOURCING CONTEXT). Make sure you pasted Claude\'s full response.');
+      return;
+    }
+
+    buildResultsUI(sections, currentCompany);
+    switchTab('results');
+  } catch(e) {
+    showError('Render error: ' + e.message);
+  }
+}
+
+// ── Section splitter ──────────────────────────────────────────────────────
+
+function findHeader(text, re) {
+  var m = re.exec(text);
+  return m ? m.index : -1;
+}
+
+function sliceSection(text, from, ends) {
+  var validEnds = ends.filter(function(e) { return e > from; });
+  var to = validEnds.length ? Math.min.apply(null, validEnds) : text.length;
+  return text.slice(from, to).trim();
+}
+
+function splitSections(text) {
+  var clean = text.replace(/\r\n/g, '\n');
+  var result = { stack: '', targets: '', context: '', linkedin: '' };
+
+  var stackIdx    = findHeader(clean, /##\s*(TECH\s+STACK|AI\s+STACK)\s+FINGERPRINT/i);
+  var targetsIdx  = findHeader(clean, /##\s*WARM\s+TARGETS/i);
+  var contextIdx  = findHeader(clean, /##\s*SOURCING\s+CONTEXT/i);
+  var linkedinIdx = findHeader(clean, /##\s*LINKEDIN\s+SEARCH/i);
+
+  if (stackIdx   !== -1) result.stack   = sliceSection(clean, stackIdx,   [targetsIdx, contextIdx, linkedinIdx]);
+  if (targetsIdx !== -1) result.targets = sliceSection(clean, targetsIdx,  [contextIdx, linkedinIdx]);
+  if (contextIdx !== -1) result.context = sliceSection(clean, contextIdx,  [linkedinIdx]);
+  if (linkedinIdx !== -1) result.linkedin = clean.slice(linkedinIdx).trim();
+
+  return result;
+}
+
+// ── Field extractors ──────────────────────────────────────────────────────
+
+function extractLine(text, label) {
+  var re = new RegExp('(?:^|\\n)\\s*-?\\s*' + label + '\\s*:\\s*([^\\n]+)', 'i');
+  var m = re.exec(text);
+  return (m && m[1]) ? m[1].replace(/\*\*/g, '').trim() : '';
+}
+
+function safeExtract(text, labels) {
+  for (var i = 0; i < labels.length; i++) {
+    var r = extractLine(text, labels[i]);
+    if (r) return r;
+  }
+  return '';
+}
+
+function extractField(block, label) {
+  // label must be a plain string — no pipes, no alternation
+  var stopWords = 'WHY WARM|TECH SIGNAL|OUTREACH ANGLE|OUTREACH|GITHUB|LINKEDIN|NAME TYPE';
+  var re = new RegExp('(?:^|\\n)\\s*(?:\\*\\*)?' + label + '(?:\\*\\*)?\\s*:\\s*([^\\n]+(?:\\n(?!\\s*(?:' + stopWords + ')\\s*:)[^\\n]+)*)', 'i');
+  var m = re.exec(block);
+  return (m && m[1]) ? m[1].replace(/\*\*/g, '').replace(/\n/g, ' ').trim() : '';
+}
+
+function getField(block, labels) {
+  for (var i = 0; i < labels.length; i++) {
+    var r = extractField(block, labels[i]);
+    if (r) return r;
+  }
+  return '';
+}
+
+// ── UI builder ────────────────────────────────────────────────────────────
+
+function buildResultsUI(sections, company) {
+  var grid = document.getElementById('outputGrid');
+  grid.innerHTML = '<div class="success-bar"><span class="dot-g"></span>Report rendered — <strong style="margin-left:3px">' + company + '</strong></div>';
+
+  if (sections.stack)    addSection(grid, 'tag-stack',   'Tech Stack',       company + ' — full stack fingerprint',   function(el) { renderStack(sections.stack, el); });
+  if (sections.targets)  addSection(grid, 'tag-targets', 'Warm Targets',     company + ' — real engineers to source', function(el) { renderTargets(sections.targets, el); });
+  if (sections.context)  addSection(grid, 'tag-context', 'Sourcing Context', company + ' — outreach intelligence',    function(el) { renderContext(sections.context, el); });
+  if (sections.linkedin) addSection(grid, 'tag-stack',   'LinkedIn Strings', company + ' — Boolean search fallback',  function(el) { renderLinkedIn(sections.linkedin, el); });
+}
+
+function addSection(grid, tagClass, tagLabel, title, renderFn) {
+  var s = document.createElement('div');
+  s.className = 'section';
+  var id = 'sec_' + Math.random().toString(36).slice(2, 8);
+  s.innerHTML = '<div class="section-header"><span class="section-tag ' + tagClass + '">' + tagLabel + '</span><span class="section-title">' + title + '</span></div><div class="section-body" id="' + id + '"></div>';
+  grid.appendChild(s);
+  renderFn(document.getElementById(id));
+}
+
+function chipify(str, cls) {
+  if (!str || str.toLowerCase().includes('none confirmed') || str.startsWith('[')) {
+    return '<span class="chip chip-tool" style="opacity:.5">none confirmed</span>';
+  }
+  return str.split(/[,;]+/).map(function(s) { return s.trim(); })
+    .filter(function(s) { return s && s.length < 90; })
+    .map(function(s) { return '<span class="chip ' + cls + '">' + s + '</span>'; })
+    .join('');
+}
+
+function renderStack(raw, el) {
+  var langs   = safeExtract(raw, ['LANGUAGES']);
+  var frames  = safeExtract(raw, ['FRAMEWORKS']);
+  var infra   = safeExtract(raw, ['INFRA']);
+  var data    = safeExtract(raw, ['DATA']);
+  var aiml    = safeExtract(raw, ['AI/ML', 'AI']);
+  var tooling = safeExtract(raw, ['TOOLING']);
+  var sigMatch = /SIGNAL\s*:\s*([^\n].+?)(?=\n\s*-\s+[A-Z]|\n\n|$)/is.exec(raw);
+  var signal  = sigMatch ? sigMatch[1].replace(/\*\*/g, '').trim() : '';
+
+  var rows = [
+    { label: 'Languages',  val: langs,   cls: 'chip-lang'  },
+    { label: 'Frameworks', val: frames,  cls: 'chip-tool'  },
+    { label: 'Infra',      val: infra,   cls: 'chip-infra' },
+    { label: 'Data',       val: data,    cls: 'chip-data'  },
+    { label: 'AI / ML',    val: aiml,    cls: 'chip-ai'    },
+    { label: 'Tooling',    val: tooling, cls: 'chip-tool'  },
+  ].filter(function(r) { return r.val && !r.val.startsWith('['); });
+
+  if (!rows.length && !signal) {
+    el.innerHTML = '<p class="prose">Stack data not parsed.</p>';
+    return;
+  }
+
+  var html = '<div class="stack-grid">';
+  rows.forEach(function(r) {
+    html += '<div class="stack-row"><div class="stack-row-label">' + r.label + '</div><div class="chips">' + chipify(r.val, r.cls) + '</div></div>';
+  });
+  html += '</div>';
+  if (signal) html += '<div class="stack-signal"><p class="prose"><strong>Culture signal:</strong> ' + signal + '</p></div>';
+  el.innerHTML = html;
+}
+
+function renderTargets(raw, el) {
+  var blocks = raw.split(/\n\s*(?:\*\*)?NAME TYPE(?:\*\*)?:/i).slice(1);
+  if (!blocks.length) {
+    el.innerHTML = '<p class="prose">No targets found — check that the response used NAME TYPE: format.</p>';
+    return;
+  }
+
+  var html = '';
+  blocks.forEach(function(block, i) {
+    var firstLine = block.match(/^\s*\**([^\n*]+)/);
+    var nameType  = firstLine ? firstLine[1].replace(/\*\*/g,'').trim() : 'Engineer';
+    var whyWarm   = getField(block, ['WHY WARM']);
+    var techSig   = getField(block, ['TECH SIGNAL']);
+    var outreach  = getField(block, ['OUTREACH ANGLE', 'OUTREACH']);
+    var github    = getField(block, ['GITHUB']);
+    var linkedin  = getField(block, ['LINKEDIN']);
+
+    var sc = i < 2 ? 'score-high' : i < 4 ? 'score-mid' : 'score-low';
+    var sl = i < 2 ? 'High signal' : i < 4 ? 'Mid signal' : 'Warm';
+
+    var ghHandle = (github && !github.toLowerCase().startsWith('not found')) ? github.replace(/^@/, '').split(' ')[0] : null;
+    var ghUrl    = ghHandle ? 'https://github.com/' + ghHandle : null;
+    var liUrl    = (linkedin && linkedin.match(/^https?:\/\//)) ? linkedin : null;
+    var liSearch = (!liUrl && linkedin && !linkedin.toLowerCase().startsWith('not found')) ? linkedin : null;
+
+    html += '<div class="target-card">';
+    html += '<div class="target-top"><div class="target-name">' + nameType + '</div><span class="score ' + sc + '">' + sl + '</span></div>';
+    if (whyWarm)  html += '<div class="field-row"><span class="field-label lbl-why">Why warm</span><span>' + whyWarm + '</span></div>';
+    if (techSig)  html += '<div class="field-row"><span class="field-label lbl-tech">Tech signal</span><span>' + techSig + '</span></div>';
+    if (outreach) html += '<div class="field-row divider"><span class="field-label lbl-outreach">Outreach</span><span>' + outreach + '</span></div>';
+    if (ghUrl || liUrl || liSearch) {
+      html += '<div class="field-row" style="margin-top:8px;flex-wrap:wrap;gap:8px;">';
+      if (ghUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><span style="font-size:11px"><a href="' + ghUrl + '" target="_blank" style="color:var(--sky);text-decoration:none">@' + ghHandle + ' ↗</a></span></div>';
+      if (liUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px"><a href="' + liUrl + '" target="_blank" style="color:var(--moss);text-decoration:none">View profile ↗</a></span></div>';
+      if (liSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px;color:var(--earth)">' + liSearch + '</span></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function renderContext(raw, el) {
+  var body = raw.replace(/^##[^\n]*\n/, '').replace(/\*\*/g, '').trim();
+  var paras = body.split(/\n\n+/).filter(function(p) { return p.trim() && !p.trim().startsWith('#'); });
+  if (!paras.length) { el.innerHTML = '<p class="prose">No context found.</p>'; return; }
+  el.innerHTML = paras.map(function(p) { return '<p class="prose">' + p.trim().replace(/\n/g, ' ') + '</p>'; }).join('');
+}
+
+function renderLinkedIn(raw, el) {
+  var body = raw.replace(/^##[^\n]*\n/, '').trim();
+  var blocks = body.split(/\n\n+/).filter(function(b) { return b.trim(); });
+  var html = '';
+  blocks.forEach(function(block) {
+    var lines = block.trim().split('\n');
+    var title = lines[0].replace(/^\[|\]$/g, '').replace(/\*\*/g, '').trim();
+    var searchLine = lines.find(function(l) { return /^Search:/i.test(l.trim()); });
+    var filterLine = lines.find(function(l) { return /^Filter:/i.test(l.trim()); });
+    if (!searchLine) return;
+    html += '<div class="li-block"><div class="li-title">' + title + '</div><div class="li-string">' + searchLine.replace(/^Search:\s*/i, '') + '</div>' + (filterLine ? '<div class="li-filter">' + filterLine + '</div>' : '') + '</div>';
+  });
+  el.innerHTML = html || '<p class="prose">No search strings found.</p>';
+}
+</script>
+
+
+</body></html>
