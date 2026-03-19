@@ -103,6 +103,13 @@
   .li-title { font-size: 11px; font-weight: 600; color: var(--earth); margin-bottom: 6px; }
   .li-string { font-family: monospace; font-size: 11px; color: var(--plum); background: var(--plum-light); border: 1px solid rgba(61,43,74,0.15); padding: 6px 10px; border-radius: 5px; word-break: break-all; }
   .li-filter { font-size: 11px; color: var(--clay); margin-top: 5px; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+  select { background: var(--bone); border: 1px solid var(--border2); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 13px; padding: 10px 14px; border-radius: 8px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8680' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+  select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); background-color: #fff; }
+  .params-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; background: var(--sky-light); border: 1px solid rgba(26,58,92,0.15); border-radius: 8px; margin-bottom: 14px; font-size: 11px; color: var(--sky); }
+  .params-bar strong { font-weight: 600; }
+  .params-chip { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: rgba(26,58,92,0.1); color: var(--sky); border: 1px solid rgba(26,58,92,0.2); }
 </style>
 </head>
 <body>
@@ -127,20 +134,52 @@
 
   <div class="panel active" id="panel-scan">
     <div class="step-card">
-      <div class="step-head"><span class="step-num">1</span> Enter a company</div>
-      <div class="input-row">
-        <input type="text" id="companyInput" placeholder="e.g. Stripe, Vercel, Glean, Modal Labs" onkeydown="if(event.key===&#39;Enter&#39;)generatePrompt()">
-        <button class="btn btn-orange" onclick="generatePrompt()">Generate Prompt</button>
+      <div class="step-head"><span class="step-num">1</span> Enter a company + role</div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label" for="companyInput">Company</label>
+          <input type="text" id="companyInput" placeholder="e.g. Stripe, Vercel, Glean" onkeydown="if(event.key==='Enter')generatePrompt()">
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="roleInput">Role type (optional)</label>
+          <select id="roleInput">
+            <option value="">General — no role type</option>
+            <option value="Backend Engineer">Backend Engineer</option>
+            <option value="Full Stack Engineer">Full Stack Engineer</option>
+            <option value="Frontend Engineer">Frontend Engineer</option>
+            <option value="SRE / Infrastructure Engineer">SRE / Infrastructure Engineer</option>
+            <option value="Applied AI / LLM Engineer">Applied AI / LLM Engineer</option>
+            <option value="Developer Platform Engineer">Developer Platform Engineer</option>
+            <option value="Engineering Manager">Engineering Manager</option>
+            <option value="Staff / Principal Engineer">Staff / Principal Engineer</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-grid" style="margin-bottom:12px">
+        <div class="input-group">
+          <label class="input-label" for="levelInput">Level (optional)</label>
+          <select id="levelInput">
+            <option value="">No level specified</option>
+            <option value="IC3">IC3 — Mid-level</option>
+            <option value="IC4">IC4 — Senior</option>
+            <option value="IC5">IC5 — Staff / Principal</option>
+            <option value="M3">M3 — Engineering Manager</option>
+            <option value="M4">M4 — Senior Manager</option>
+          </select>
+        </div>
+        <div class="input-group" style="justify-content:flex-end;padding-top:22px">
+          <button class="btn btn-orange" style="width:100%" onclick="generatePrompt()">Generate Prompt</button>
+        </div>
       </div>
       <div class="quick-fills">
         <span class="quick-label">Try</span>
-        <button class="pill" onclick="quickFill(&#39;Stripe&#39;)">Stripe</button>
-        <button class="pill" onclick="quickFill(&#39;Linear&#39;)">Linear</button>
-        <button class="pill" onclick="quickFill(&#39;Vercel&#39;)">Vercel</button>
-        <button class="pill" onclick="quickFill(&#39;Glean&#39;)">Glean</button>
-        <button class="pill" onclick="quickFill(&#39;Retool&#39;)">Retool</button>
-        <button class="pill" onclick="quickFill(&#39;Modal Labs&#39;)">Modal Labs</button>
-        <button class="pill" onclick="quickFill(&#39;Fly.io&#39;)">Fly.io</button>
+        <button class="pill" onclick="quickFill('Stripe')">Stripe</button>
+        <button class="pill" onclick="quickFill('Linear')">Linear</button>
+        <button class="pill" onclick="quickFill('Vercel')">Vercel</button>
+        <button class="pill" onclick="quickFill('Glean')">Glean</button>
+        <button class="pill" onclick="quickFill('Retool')">Retool</button>
+        <button class="pill" onclick="quickFill('Modal Labs')">Modal Labs</button>
+        <button class="pill" onclick="quickFill('Fly.io')">Fly.io</button>
       </div>
     </div>
 
@@ -188,6 +227,8 @@
 
 <script>
 var currentCompany = '';
+var currentRole = '';
+var currentLevel = '';
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -205,13 +246,24 @@ function generatePrompt() {
   var company = document.getElementById('companyInput').value.trim();
   if (!company) { document.getElementById('companyInput').focus(); return; }
   currentCompany = company;
-  document.getElementById('promptText').textContent = buildPrompt(company);
+  currentRole = document.getElementById('roleInput').value;
+  currentLevel = document.getElementById('levelInput').value;
+  document.getElementById('promptText').textContent = buildPrompt(company, currentRole, currentLevel);
   document.getElementById('step2').style.display = 'block';
   setTimeout(function() { document.getElementById('step2').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
 }
 
-function buildPrompt(company) {
-  return 'You are a senior talent intelligence analyst for Zapier\'s TA team. Analyze the company: "' + company + '"\n\nSearch the web for current signals — GitHub repos and contributor credits, engineering blog bylines, job listings (for stack clues), conference talks, and LinkedIn signals.\n\nReturn a report in EXACTLY this format:\n\n## TECH STACK FINGERPRINT\n- LANGUAGES: [primary languages]\n- FRAMEWORKS: [web/app frameworks]\n- INFRA: [cloud, compute, deployment tools]\n- DATA: [databases, pipelines, warehouses]\n- AI/ML: [models, frameworks, AI tooling]\n- TOOLING: [dev experience, observability, CI/CD]\n- SIGNAL: [2-3 sentences on engineering culture]\n\n## WARM TARGETS\n\nNAME TYPE: [Full Name — Role Title]\nWHY WARM: [specific thing they built/wrote/shipped]\nTECH SIGNAL: [concrete evidence — commit, feature, talk, paper]\nOUTREACH ANGLE: [one specific cold message hook]\nGITHUB: [handle or "not found"]\nLINKEDIN: [url or "search: Full Name + ' + company + '"]\n\n[repeat the NAME TYPE block for 4-6 people]\n\n## SOURCING CONTEXT\n\n[2-3 paragraphs on what makes these engineers interesting, what frustrates them, what Zapier offers]\n\nReal names only — no personas.';
+function buildPrompt(company, role, level) {
+  var roleStr = (role && level) ? role + ', ' + level
+              : (role)          ? role
+              : (level)         ? level
+              : '';
+  var targetLine = roleStr
+    ? 'Target role: ' + roleStr + '\n\n'
+    : '';
+  var scanParams = '## SCAN PARAMETERS\n- COMPANY: ' + company + '\n- TARGET ROLE: ' + (roleStr || 'General — no role type specified') + '\n- SIGNAL SOURCES USED: [fill in after research]\n\n';
+
+  return 'You are a senior talent intelligence analyst for Zapier\'s TA team. Analyze the company: "' + company + '"\n\n' + targetLine + 'Search the web for current signals — GitHub repos and contributor credits, engineering blog bylines, job listings (for stack clues), conference talks, and LinkedIn signals.\n\nIf a target role is specified, focus your research on signal sources most likely to surface that type of engineer (e.g. for SRE: CNCF blog, KubeCon talks, infra repos; for backend engineers: SDK/API repos, developer blog credits, API conference circuits; for AI engineers: AI Engineer Summit, arXiv, eval framework repos).\n\nReturn a report in EXACTLY this format:\n\n' + scanParams + '## TECH STACK FINGERPRINT\n- LANGUAGES: [primary languages]\n- FRAMEWORKS: [web/app frameworks]\n- INFRA: [cloud, compute, deployment tools]\n- DATA: [databases, pipelines, warehouses]\n- AI/ML: [models, frameworks, AI tooling]\n- TOOLING: [dev experience, observability, CI/CD]\n- SIGNAL: [2-3 sentences on engineering culture]\n\n## WARM TARGETS\n\nNAME TYPE: [Full Name — Role Title (approximate level if known)]\nWHY WARM: [specific thing they built/wrote/shipped]\nTECH SIGNAL: [concrete evidence — commit, feature, talk, paper]\nOUTREACH ANGLE: [one specific cold message hook]\nGITHUB: [handle or "not found"]\nLINKEDIN: [url or "search: Full Name + ' + company + '"]\n\n[repeat the NAME TYPE block for 4-6 people — prioritize relevance to the target role over public footprint]\n\n## LINKEDIN SEARCH STRINGS\n\n[Profile type 1 — tuned to target role and level]\nSearch: [boolean string]\nFilter: Current company = ' + company + '\n\n[Profile type 2 — different keyword angle]\nSearch: [boolean string]\nFilter: Current company = ' + company + '\n\n[Profile type 3 — broader or adjacent]\nSearch: [boolean string]\nFilter: Current company = ' + company + '\n\n## SOURCING CONTEXT\n\n[2-3 paragraphs on what makes these engineers interesting, what frustrates them, what Zapier offers — frame in terms of Zapier\'s zone model, async culture, and AI-first product direction where relevant]\n\nReal names only — no personas.';
 }
 
 function copyPrompt() {
@@ -278,14 +330,18 @@ function splitSections(text) {
   var clean = text.replace(/\r\n/g, '\n');
   var result = { stack: '', targets: '', context: '', linkedin: '' };
 
+  var paramsIdx   = findHeader(clean, /##\s*SCAN\s+PARAMETERS/i);
   var stackIdx    = findHeader(clean, /##\s*(TECH\s+STACK|AI\s+STACK)\s+FINGERPRINT/i);
   var targetsIdx  = findHeader(clean, /##\s*WARM\s+TARGETS/i);
   var contextIdx  = findHeader(clean, /##\s*SOURCING\s+CONTEXT/i);
   var linkedinIdx = findHeader(clean, /##\s*LINKEDIN\s+SEARCH/i);
 
-  if (stackIdx   !== -1) result.stack   = sliceSection(clean, stackIdx,   [targetsIdx, contextIdx, linkedinIdx]);
-  if (targetsIdx !== -1) result.targets = sliceSection(clean, targetsIdx,  [contextIdx, linkedinIdx]);
-  if (contextIdx !== -1) result.context = sliceSection(clean, contextIdx,  [linkedinIdx]);
+  // paramsIdx is parsed but not rendered — it just helps bound the stack section
+  var allIdx = [paramsIdx, stackIdx, targetsIdx, contextIdx, linkedinIdx].filter(function(i) { return i !== -1; });
+
+  if (stackIdx   !== -1) result.stack   = sliceSection(clean, stackIdx,   [targetsIdx, contextIdx, linkedinIdx].filter(function(i){return i>stackIdx;}));
+  if (targetsIdx !== -1) result.targets = sliceSection(clean, targetsIdx,  [contextIdx, linkedinIdx].filter(function(i){return i>targetsIdx;}));
+  if (contextIdx !== -1) result.context = sliceSection(clean, contextIdx,  [linkedinIdx].filter(function(i){return i>contextIdx;}));
   if (linkedinIdx !== -1) result.linkedin = clean.slice(linkedinIdx).trim();
 
   return result;
@@ -327,12 +383,19 @@ function getField(block, labels) {
 
 function buildResultsUI(sections, company) {
   var grid = document.getElementById('outputGrid');
-  grid.innerHTML = '<div class="success-bar"><span class="dot-g"></span>Report rendered — <strong style="margin-left:3px">' + company + '</strong></div>';
+  var roleLabel = currentRole || 'General';
+  var levelLabel = currentLevel || '';
+  var paramsHtml = '<div class="params-bar"><strong>' + company + '</strong>';
+  paramsHtml += '<span class="params-chip">' + roleLabel + '</span>';
+  if (levelLabel) paramsHtml += '<span class="params-chip">' + levelLabel + '</span>';
+  paramsHtml += '<span style="margin-left:auto;opacity:0.6;font-size:10px">Report rendered</span></div>';
+
+  grid.innerHTML = paramsHtml;
 
   if (sections.stack)    addSection(grid, 'tag-stack',   'Tech Stack',       company + ' — full stack fingerprint',   function(el) { renderStack(sections.stack, el); });
   if (sections.targets)  addSection(grid, 'tag-targets', 'Warm Targets',     company + ' — real engineers to source', function(el) { renderTargets(sections.targets, el); });
   if (sections.context)  addSection(grid, 'tag-context', 'Sourcing Context', company + ' — outreach intelligence',    function(el) { renderContext(sections.context, el); });
-  if (sections.linkedin) addSection(grid, 'tag-stack',   'LinkedIn Strings', company + ' — Boolean search fallback',  function(el) { renderLinkedIn(sections.linkedin, el); });
+  if (sections.linkedin) addSection(grid, 'tag-stack',   'LinkedIn Strings', company + ' — Boolean search strings',   function(el) { renderLinkedIn(sections.linkedin, el); });
 }
 
 function addSection(grid, tagClass, tagLabel, title, renderFn) {
