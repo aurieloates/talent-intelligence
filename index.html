@@ -336,13 +336,22 @@ function splitSections(text) {
   var contextIdx  = findHeader(clean, /##\s*SOURCING\s+CONTEXT/i);
   var linkedinIdx = findHeader(clean, /##\s*LINKEDIN\s+SEARCH/i);
 
-  // paramsIdx is parsed but not rendered — it just helps bound the stack section
-  var allIdx = [paramsIdx, stackIdx, targetsIdx, contextIdx, linkedinIdx].filter(function(i) { return i !== -1; });
+  // Collect all found section positions so each section is bounded by the next one
+  var allIdx = [paramsIdx, stackIdx, targetsIdx, contextIdx, linkedinIdx]
+    .filter(function(i) { return i !== -1; })
+    .sort(function(a, b) { return a - b; });
 
-  if (stackIdx   !== -1) result.stack   = sliceSection(clean, stackIdx,   [targetsIdx, contextIdx, linkedinIdx].filter(function(i){return i>stackIdx;}));
-  if (targetsIdx !== -1) result.targets = sliceSection(clean, targetsIdx,  [contextIdx, linkedinIdx].filter(function(i){return i>targetsIdx;}));
-  if (contextIdx !== -1) result.context = sliceSection(clean, contextIdx,  [linkedinIdx].filter(function(i){return i>contextIdx;}));
-  if (linkedinIdx !== -1) result.linkedin = clean.slice(linkedinIdx).trim();
+  function nextIdx(from) {
+    for (var i = 0; i < allIdx.length; i++) {
+      if (allIdx[i] > from) return allIdx[i];
+    }
+    return clean.length;
+  }
+
+  if (stackIdx   !== -1) result.stack    = clean.slice(stackIdx,    nextIdx(stackIdx)).trim();
+  if (targetsIdx !== -1) result.targets  = clean.slice(targetsIdx,  nextIdx(targetsIdx)).trim();
+  if (contextIdx !== -1) result.context  = clean.slice(contextIdx,  nextIdx(contextIdx)).trim();
+  if (linkedinIdx !== -1) result.linkedin = clean.slice(linkedinIdx, nextIdx(linkedinIdx)).trim();
 
   return result;
 }
@@ -508,10 +517,18 @@ function renderLinkedIn(raw, el) {
     var lines = block.trim().split('\n').filter(function(l) { return l.trim(); });
     if (!lines.length) return;
     var title = lines[0].replace(/^\[|\]$/g, '').replace(/\*\*/g, '').replace(/^#+\s*/, '').trim();
+    // Accept explicit "Search:" prefix OR a bare quoted boolean string
     var searchLine = lines.find(function(l) { return /^Search:/i.test(l.trim()); });
+    if (!searchLine) {
+      searchLine = lines.find(function(l) {
+        var t = l.trim();
+        return t.startsWith('"') || /^["(]/i.test(t);
+      });
+    }
     var filterLine = lines.find(function(l) { return /^Filter:/i.test(l.trim()); });
     if (!searchLine) return;
-    html += '<div class="li-block"><div class="li-title">' + title + '</div><div class="li-string">' + searchLine.replace(/^Search:\s*/i, '') + '</div>' + (filterLine ? '<div class="li-filter">' + filterLine + '</div>' : '') + '</div>';
+    var searchVal = searchLine.replace(/^Search:\s*/i, '').trim();
+    html += '<div class="li-block"><div class="li-title">' + title + '</div><div class="li-string">' + searchVal + '</div>' + (filterLine ? '<div class="li-filter">' + filterLine + '</div>' : '') + '</div>';
   });
   el.innerHTML = html || '<p class="prose">No search strings found.</p>';
 }
