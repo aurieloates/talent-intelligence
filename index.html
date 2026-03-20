@@ -382,7 +382,7 @@ function safeExtract(text, labels) {
 function extractField(block, label) {
   // label must be a plain string — no pipes, no alternation
   var stopWords = 'WHY WARM|TECH SIGNAL|OUTREACH ANGLE|OUTREACH|GITHUB|LINKEDIN|NAME TYPE';
-  var re = new RegExp('(?:^|\\n)\\s*(?:\\*\\*)?' + label + '(?:\\*\\*)?\\s*:\\s*([^\\n]+(?:\\n(?!\\s*(?:' + stopWords + ')\\s*:)[^\\n]+)*)', 'i');
+  var re = new RegExp('(?:^|\\n)\\s*(?:\\*{0,2})' + label + '(?:\\*{0,2})\\s*:\\s*([^\\n]+(?:\\n(?!\\s*(?:\\*{0,2})(?:' + stopWords + ')(?:\\*{0,2})\\s*:)[^\\n]+)*)', 'i');
   var m = re.exec(block);
   return (m && m[1]) ? m[1].replace(/\*\*/g, '').replace(/\n/g, ' ').trim() : '';
 }
