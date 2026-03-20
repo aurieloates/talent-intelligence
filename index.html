@@ -11,6 +11,9 @@
     --earth: #3D3935; --coal: #1A1714; --moss: #2D4A2D; --moss-light: #EBF2EB;
     --plum: #3D2B4A; --plum-light: #F0EBF5; --sky: #1A3A5C; --sky-light: #EBF2FA;
     --border: rgba(61,57,53,0.1); --border2: rgba(61,57,53,0.18);
+    --linkedin: #0A66C2; --linkedin-light: #EBF3FB; --linkedin-mid: #B3D1EE;
+    --github-green: #1A7340; --github-green-light: #E6F4EC; --github-green-mid: #A8D5B8;
+    --dark-panel: #1E1C1A; --dark-panel2: #2A2725;
   }
   body { background: var(--bone); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; }
   .shell { max-width: 900px; margin: 0 auto; padding: 28px 24px 52px; }
@@ -92,8 +95,33 @@
   .lbl-why      { color: var(--earth); background: var(--mist); border: 1px solid var(--border2); }
   .lbl-tech     { color: var(--plum); background: var(--plum-light); border: 1px solid rgba(61,43,74,0.15); }
   .lbl-outreach { color: var(--orange); background: var(--orange-light); border: 1px solid var(--orange-mid); }
-  .lbl-github   { color: var(--sky); background: var(--sky-light); border: 1px solid rgba(26,58,92,0.2); }
-  .lbl-linkedin { color: var(--moss); background: var(--moss-light); border: 1px solid rgba(45,74,45,0.2); }
+  .lbl-github   { color: #fff; background: var(--github-green); border: 1px solid var(--github-green); }
+  .lbl-linkedin { color: #fff; background: var(--linkedin); border: 1px solid var(--linkedin); }
+  /* Dark results panel */
+  #panel-results { background: var(--dark-panel); border-radius: 14px; padding: 16px; margin-top: 4px; }
+  #panel-results .section { background: var(--dark-panel2); border-color: rgba(255,255,255,0.08); box-shadow: none; }
+  #panel-results .section-header { background: rgba(255,255,255,0.04); border-bottom-color: rgba(255,255,255,0.08); }
+  #panel-results .stack-row { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+  #panel-results .stack-row-label { color: rgba(255,255,255,0.4); }
+  #panel-results .target-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+  #panel-results .target-card::before { opacity: 0.15; }
+  #panel-results .target-card:hover { border-color: rgba(255,79,0,0.4); background: rgba(255,255,255,0.06); }
+  #panel-results .target-card:hover::before { opacity: 0.25; }
+  #panel-results .target-name { color: #fff; }
+  #panel-results .field-row { color: rgba(255,255,255,0.65); }
+  #panel-results .prose { color: rgba(255,255,255,0.65); }
+  #panel-results .prose strong { color: rgba(255,255,255,0.9); }
+  #panel-results .stack-signal { border-top-color: rgba(255,255,255,0.08); }
+  #panel-results .li-block { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
+  #panel-results .li-title { color: rgba(255,255,255,0.8); }
+  #panel-results .li-filter { color: rgba(255,255,255,0.4); }
+  #panel-results .params-bar { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  #panel-results .params-chip { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.15); }
+  #panel-results .empty { color: rgba(255,255,255,0.4); }
+  #panel-results .empty-box { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+  #panel-results .empty-text { color: rgba(255,255,255,0.5); }
+  #panel-results .empty-sub { color: rgba(255,255,255,0.3); }
+  #panel-results .section-title { color: rgba(255,255,255,0.6); font-size: 12px; }
   .divider { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
   .prose { font-size: 13px; color: var(--clay); line-height: 1.75; margin-bottom: 10px; }
   .prose:last-child { margin-bottom: 0; }
@@ -513,20 +541,25 @@ function renderTargets(raw, el) {
     }
 
     // Normalise LinkedIn value — handle full URLs, protocol-less URLs, and search strings
+    // Always produce a clickable LinkedIn link — fall back to name search if not found
     var liUrl    = null;
     var liSearch = null;
     var liSearchUrl = null;
-    if (linkedin && !linkedin.toLowerCase().startsWith('not found')) {
+    if (linkedin && !linkedin.toLowerCase().startsWith('not found') && linkedin.trim()) {
       if (linkedin.match(/^https?:\/\//i)) {
         liUrl = linkedin;
       } else if (linkedin.match(/^linkedin\.com\//i)) {
         liUrl = 'https://' + linkedin;
       } else {
-        // It's a search string — make it a clickable LinkedIn people search
         var query = linkedin.replace(/^search:\s*/i, '').trim();
         liSearch = query;
         liSearchUrl = 'https://www.linkedin.com/search/results/people/?keywords=' + encodeURIComponent(query);
       }
+    } else {
+      // Fall back to searching by candidate name
+      var fallbackName = nameType.split(/--|—/)[0].trim();
+      liSearch = fallbackName;
+      liSearchUrl = 'https://www.linkedin.com/search/results/people/?keywords=' + encodeURIComponent(fallbackName);
     }
 
     html += '<div class="target-card">';
@@ -534,14 +567,13 @@ function renderTargets(raw, el) {
     if (whyWarm)  html += '<div class="field-row"><span class="field-label lbl-why">Why warm</span><span>' + whyWarm + '</span></div>';
     if (techSig)  html += '<div class="field-row"><span class="field-label lbl-tech">Tech signal</span><span>' + techSig + '</span></div>';
     if (outreach) html += '<div class="field-row divider"><span class="field-label lbl-outreach">Outreach</span><span>' + outreach + '</span></div>';
-    if (ghUrl || ghSearch || liUrl || liSearch) {
-      html += '<div class="field-row" style="margin-top:8px;flex-wrap:wrap;gap:8px;">';
-      if (ghUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><span style="font-size:11px"><a href="' + ghUrl + '" target="_blank" style="color:var(--sky);text-decoration:none">@' + ghHandle + ' ↗</a></span></div>';
-      if (ghSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><span style="font-size:11px"><a href="' + ghSearchUrl + '" target="_blank" style="color:var(--sky);text-decoration:none">Search: ' + ghSearch + ' ↗</a></span></div>';
-      if (liUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px"><a href="' + liUrl + '" target="_blank" style="color:var(--moss);text-decoration:none">View profile ↗</a></span></div>';
-      if (liSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px"><a href="' + liSearchUrl + '" target="_blank" style="color:var(--moss);text-decoration:none">Search: ' + liSearch + ' ↗</a></span></div>';
-      html += '</div>';
-    }
+    // Links row — LinkedIn always shown, GitHub only when found
+    html += '<div class="field-row" style="margin-top:8px;flex-wrap:wrap;gap:8px;">';
+    if (ghUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><a href="' + ghUrl + '" target="_blank" style="font-size:11px;color:var(--github-green);text-decoration:none;font-weight:600;">View profile ↗</a></div>';
+    if (ghSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><a href="' + ghSearchUrl + '" target="_blank" style="font-size:11px;color:var(--github-green);text-decoration:none;font-weight:600;">Search ↗</a></div>';
+    if (liUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><a href="' + liUrl + '" target="_blank" style="font-size:11px;color:var(--linkedin);text-decoration:none;font-weight:600;">View profile ↗</a></div>';
+    if (liSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><a href="' + liSearchUrl + '" target="_blank" style="font-size:11px;color:var(--linkedin);text-decoration:none;font-weight:600;">Search ↗</a></div>';
+    html += '</div>';
     html += '</div>';
   });
   el.innerHTML = html;
