@@ -350,7 +350,7 @@ function splitSections(text) {
 // ── Field extractors ──────────────────────────────────────────────────────
 
 function extractLine(text, label) {
-  var re = new RegExp('(?:^|\\n)\\s*-?\\s*' + label + '\\s*:\\s*([^\\n]+)', 'i');
+  var re = new RegExp('(?:^|\\n)\\s*-?\\s*\\*{0,2}' + label + '\\*{0,2}\\s*:\\s*([^\\n]+)', 'i');
   var m = re.exec(text);
   return (m && m[1]) ? m[1].replace(/\*\*/g, '').trim() : '';
 }
@@ -500,12 +500,14 @@ function renderContext(raw, el) {
 }
 
 function renderLinkedIn(raw, el) {
-  var body = raw.replace(/^##[^\n]*\n/, '').trim();
+  // Strip code fences and leading ## header line
+  var body = raw.replace(/^##[^\n]*\n/, '').replace(/```[^\n]*\n?/g, '').trim();
   var blocks = body.split(/\n\n+/).filter(function(b) { return b.trim(); });
   var html = '';
   blocks.forEach(function(block) {
-    var lines = block.trim().split('\n');
-    var title = lines[0].replace(/^\[|\]$/g, '').replace(/\*\*/g, '').trim();
+    var lines = block.trim().split('\n').filter(function(l) { return l.trim(); });
+    if (!lines.length) return;
+    var title = lines[0].replace(/^\[|\]$/g, '').replace(/\*\*/g, '').replace(/^#+\s*/, '').trim();
     var searchLine = lines.find(function(l) { return /^Search:/i.test(l.trim()); });
     var filterLine = lines.find(function(l) { return /^Filter:/i.test(l.trim()); });
     if (!searchLine) return;
