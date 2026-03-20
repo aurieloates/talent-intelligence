@@ -15,11 +15,11 @@
   body { background: var(--bone); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100vh; }
   .shell { max-width: 900px; margin: 0 auto; padding: 28px 24px 52px; }
   .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 2px solid var(--border); }
-  .zap-mark { width: 32px; height: 32px; background: var(--orange); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .zap-mark svg { width: 18px; height: 18px; }
-  .header-text h1 { font-size: 17px; font-weight: 600; color: var(--coal); letter-spacing: -0.02em; line-height: 1; }
-  .header-text p { font-size: 11px; color: var(--clay); margin-top: 3px; }
-  .header-badge { margin-left: auto; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); background: var(--orange-light); border: 1px solid var(--orange-mid); padding: 3px 9px; border-radius: 4px; }
+  .zap-mark { width: 36px; height: 36px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 8px rgba(255,79,0,0.25); }
+  .zap-mark svg { width: 20px; height: 20px; }
+  .header-text h1 { font-size: 20px; font-weight: 800; color: var(--coal); letter-spacing: -0.03em; line-height: 1; }
+  .header-text p { font-size: 12px; color: var(--clay); margin-top: 4px; font-weight: 400; }
+  .header-badge { margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); background: var(--orange-light); border: 1px solid var(--orange-mid); padding: 4px 10px; border-radius: 999px; }
   .tabs { display: flex; gap: 2px; margin-bottom: 16px; background: var(--mist); border: 1px solid var(--border2); border-radius: 10px; padding: 3px; }
   .tab { flex: 1; text-align: center; padding: 7px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--clay); border: none; background: none; font-family: 'Inter', sans-serif; transition: all 0.15s; }
   .tab.active { background: #fff; color: var(--coal); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
@@ -32,8 +32,8 @@
   input[type="text"] { flex: 1; background: var(--bone); border: 1px solid var(--border2); color: var(--coal); font-family: 'Inter', sans-serif; font-size: 14px; padding: 10px 14px; border-radius: 8px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
   input[type="text"]:focus { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); background: #fff; }
   input[type="text"]::placeholder { color: var(--stone); }
-  .btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
-  .btn-orange { background: var(--orange); color: #fff; } .btn-orange:hover { background: #E04400; }
+  .btn { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 10px 22px; border-radius: 999px; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
+  .btn-orange { background: var(--orange); color: #fff; box-shadow: 0 2px 8px rgba(255,79,0,0.2); } .btn-orange:hover { background: #E04400; box-shadow: 0 4px 12px rgba(255,79,0,0.3); transform: translateY(-1px); }
   .btn-ghost { background: var(--mist); color: var(--earth); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
   .quick-fills { display: flex; align-items: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
   .quick-label { font-size: 10px; font-weight: 500; color: var(--clay); letter-spacing: 0.05em; text-transform: uppercase; }
@@ -42,7 +42,7 @@
   .prompt-box { background: var(--coal); border-radius: 10px; overflow: hidden; margin-top: 4px; }
   .prompt-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: var(--earth); }
   .prompt-toolbar span { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone); }
-  .copy-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; }
+  .copy-btn { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; padding: 4px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; }
   .copy-btn:hover { background: rgba(255,255,255,0.18); }
   .prompt-text { padding: 14px 16px; font-family: monospace; font-size: 11px; color: #D4D0C8; line-height: 1.6; white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow-y: auto; }
   .arrow-hint { display: flex; align-items: center; gap: 8px; margin: 10px 0; font-size: 12px; color: var(--clay); }
@@ -71,12 +71,19 @@
   .chip-data { background: var(--moss-light); color: var(--moss); border-color: rgba(45,74,45,0.25); }
   .chip-tool { background: var(--mist); color: var(--clay); border-color: var(--border2); }
   .stack-signal { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 12px; }
-  .target-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; background: var(--bone); transition: border-color 0.12s, box-shadow 0.12s; }
+  .target-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; background: var(--bone); transition: border-color 0.12s, box-shadow 0.12s; position: relative; overflow: hidden; }
   .target-card:last-child { margin-bottom: 0; }
-  .target-card:hover { border-color: var(--orange-mid); box-shadow: 0 2px 8px rgba(255,79,0,0.06); }
+  .target-card:hover { border-color: var(--orange-mid); box-shadow: 0 2px 10px rgba(255,79,0,0.07); }
+  .target-card::before { content: ''; position: absolute; top: -18px; right: -18px; width: 64px; height: 64px; border-radius: 50%; background: var(--orange-light); opacity: 0.7; pointer-events: none; transition: opacity 0.15s; }
+  .target-card:nth-child(2)::before { background: var(--plum-light); }
+  .target-card:nth-child(3)::before { background: var(--sky-light); }
+  .target-card:nth-child(4)::before { background: var(--moss-light); }
+  .target-card:nth-child(5)::before { background: var(--plum-light); }
+  .target-card:nth-child(6)::before { background: var(--sky-light); }
+  .target-card:hover::before { opacity: 1; }
   .target-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
   .target-name { font-size: 13px; font-weight: 600; color: var(--coal); flex: 1; margin-right: 8px; }
-  .score { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
+  .score { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 999px; flex-shrink: 0; letter-spacing: 0.04em; text-transform: uppercase; }
   .score-high { background: var(--orange-light); color: #C03A00; border: 1px solid var(--orange-mid); }
   .score-mid  { background: var(--plum-light); color: var(--plum); border: 1px solid rgba(61,43,74,0.2); }
   .score-low  { background: var(--mist); color: var(--clay); border: 1px solid var(--border2); }
@@ -479,21 +486,60 @@ function renderTargets(raw, el) {
     var sc = i < 2 ? 'score-high' : i < 4 ? 'score-mid' : 'score-low';
     var sl = i < 2 ? 'High signal' : i < 4 ? 'Mid signal' : 'Warm';
 
-    var ghHandle = (github && !github.toLowerCase().startsWith('not found')) ? github.replace(/^@/, '').split(' ')[0] : null;
-    var ghUrl    = ghHandle ? 'https://github.com/' + ghHandle : null;
-    var liUrl    = (linkedin && linkedin.match(/^https?:\/\//)) ? linkedin : null;
-    var liSearch = (!liUrl && linkedin && !linkedin.toLowerCase().startsWith('not found')) ? linkedin : null;
+    // Normalise GitHub value — handle full URLs, bare handles, and search strings
+    var ghUrl = null;
+    var ghHandle = null;
+    var ghSearchUrl = null;
+    var ghSearch = null;
+    if (github && !github.toLowerCase().startsWith('not found')) {
+      if (github.match(/^https?:\/\/github\.com\//i)) {
+        // Full URL — extract handle from it
+        ghHandle = github.replace(/^https?:\/\/github\.com\//i, '').split('/')[0];
+        ghUrl = 'https://github.com/' + ghHandle;
+      } else if (github.match(/^search:/i)) {
+        // Search string — make it a clickable GitHub people search
+        var ghQuery = github.replace(/^search:\s*/i, '').trim();
+        ghSearch = ghQuery;
+        ghSearchUrl = 'https://github.com/search?q=' + encodeURIComponent(ghQuery) + '&type=users';
+      } else if (!github.includes(' ')) {
+        // Bare handle — no spaces means it's a username
+        ghHandle = github.replace(/^@/, '');
+        ghUrl = 'https://github.com/' + ghHandle;
+      } else {
+        // Has spaces but no "search:" prefix — treat as search
+        ghSearch = github;
+        ghSearchUrl = 'https://github.com/search?q=' + encodeURIComponent(github) + '&type=users';
+      }
+    }
+
+    // Normalise LinkedIn value — handle full URLs, protocol-less URLs, and search strings
+    var liUrl    = null;
+    var liSearch = null;
+    var liSearchUrl = null;
+    if (linkedin && !linkedin.toLowerCase().startsWith('not found')) {
+      if (linkedin.match(/^https?:\/\//i)) {
+        liUrl = linkedin;
+      } else if (linkedin.match(/^linkedin\.com\//i)) {
+        liUrl = 'https://' + linkedin;
+      } else {
+        // It's a search string — make it a clickable LinkedIn people search
+        var query = linkedin.replace(/^search:\s*/i, '').trim();
+        liSearch = query;
+        liSearchUrl = 'https://www.linkedin.com/search/results/people/?keywords=' + encodeURIComponent(query);
+      }
+    }
 
     html += '<div class="target-card">';
     html += '<div class="target-top"><div class="target-name">' + nameType + '</div><span class="score ' + sc + '">' + sl + '</span></div>';
     if (whyWarm)  html += '<div class="field-row"><span class="field-label lbl-why">Why warm</span><span>' + whyWarm + '</span></div>';
     if (techSig)  html += '<div class="field-row"><span class="field-label lbl-tech">Tech signal</span><span>' + techSig + '</span></div>';
     if (outreach) html += '<div class="field-row divider"><span class="field-label lbl-outreach">Outreach</span><span>' + outreach + '</span></div>';
-    if (ghUrl || liUrl || liSearch) {
+    if (ghUrl || ghSearch || liUrl || liSearch) {
       html += '<div class="field-row" style="margin-top:8px;flex-wrap:wrap;gap:8px;">';
       if (ghUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><span style="font-size:11px"><a href="' + ghUrl + '" target="_blank" style="color:var(--sky);text-decoration:none">@' + ghHandle + ' ↗</a></span></div>';
+      if (ghSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-github">GitHub</span><span style="font-size:11px"><a href="' + ghSearchUrl + '" target="_blank" style="color:var(--sky);text-decoration:none">Search: ' + ghSearch + ' ↗</a></span></div>';
       if (liUrl)    html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px"><a href="' + liUrl + '" target="_blank" style="color:var(--moss);text-decoration:none">View profile ↗</a></span></div>';
-      if (liSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px;color:var(--earth)">' + liSearch + '</span></div>';
+      if (liSearch) html += '<div style="display:flex;align-items:center;gap:5px"><span class="field-label lbl-linkedin">LinkedIn</span><span style="font-size:11px"><a href="' + liSearchUrl + '" target="_blank" style="color:var(--moss);text-decoration:none">Search: ' + liSearch + ' ↗</a></span></div>';
       html += '</div>';
     }
     html += '</div>';
